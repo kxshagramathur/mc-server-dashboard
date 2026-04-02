@@ -1,30 +1,32 @@
-# Archive
+# Minecraft Server Dashboard
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+A glassmorphism-styled dashboard for managing a Minecraft server on AWS EC2. It handles instance control and real-time game status without the typical browser CORS issues.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/shared-8867s-projects/v0-archive)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/projects/7OBKdWwIbzR)
+## Features
 
-## Overview
+- **EC2 Control**: Start and stop the server instance directly from the UI.
+- **Machine Status**: Real-time instance state (Offline/Starting/Online) pulled via a server-side AWS Lambda proxy.
+- **Live Game Stats**: Uses `craftping` to fetch player counts and player lists from the Java server.
+- **Modern UI**: Built with Next.js, featuring a particle WebGL background and glass-themed cards.
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+## How it works
 
-## Deployment
+The dashboard uses two main API routes to keep things responsive and bypass browser restrictions:
 
-Your project is live at:
+1. `/api/ec2`: Proxies commands to an AWS Lambda function. This avoids CORS preflight failures that come with calling AWS directly from a browser.
+2. `/api/mc-status`: Queries the Minecraft server using the Query (UDP) and Ping (TCP) protocols. It stays isolated from the machine status so the UI doesn't flicker when the game is still booting.
 
-**[https://vercel.com/shared-8867s-projects/v0-archive](https://vercel.com/shared-8867s-projects/v0-archive)**
+## Setup
 
-## Build your app
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-Continue building your app on:
+2. Run the dev server:
+   ```bash
+   npm run dev
+   ```
 
-**[https://v0.app/chat/projects/7OBKdWwIbzR](https://v0.app/chat/projects/7OBKdWwIbzR)**
+3. Configure your Lambda URL and Instance ID in `hooks/use-server-controller.ts` and the Lambda code respectively.
 
-## How It Works
-
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
