@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { QueryClient, JavaPingClient } from "craftping";
 
-const MC_HOST = "43.204.78.40";
+const MC_HOST = process.env.MC_HOST as string;
 const MC_PORT = 25565;
 const TIMEOUT_MS = 5000;
 
@@ -17,7 +17,7 @@ export async function GET() {
         MC_PORT,
         AbortSignal.timeout(TIMEOUT_MS)
       );
-      
+
       return NextResponse.json({
         online: true,
         playersOnline: queried.players?.length || queried.numplayers || 0,
@@ -62,6 +62,6 @@ export async function GET() {
     }
   } finally {
     // Cleanup UDP socket
-    queryClient.close().catch(() => {});
+    queryClient.close().catch(() => { });
   }
 }

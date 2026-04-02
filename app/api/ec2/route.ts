@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const LAMBDA_URL =
-  "https://bfh5gosfjg.execute-api.ap-south-1.amazonaws.com/default/minecraft-controller";
+const LAMBDA_URL = process.env.LAMBDA_URL as string;
 
 export async function GET(req: NextRequest) {
   const action = req.nextUrl.searchParams.get("action");
