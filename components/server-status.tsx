@@ -6,8 +6,8 @@ interface ServerStatusProps {
 
 export function ServerStatusCard({ status }: ServerStatusProps) {
   return (
-    <div className="bg-white/5 border border-white/10 hover:border-[#B89000] backdrop-blur-lg rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-8 flex flex-col items-center justify-center shadow-2xl transition-all duration-300 hover:shadow-[0_0_20px_rgba(184,144,0,0.4)]">
-      <h2 className="font-mono text-xs sm:text-sm tracking-[0.2em] text-white/60 mb-3 sm:mb-4 uppercase">
+    <div className="bg-white/5 border border-white/10 hover:border-[#B89000] backdrop-blur-lg rounded-[1.5rem] sm:rounded-[2rem] p-4 sm:p-6 flex flex-col items-center justify-center shadow-2xl transition-all duration-300 hover:shadow-[0_0_20px_rgba(184,144,0,0.4)] text-center w-full">
+      <h2 className="font-mono text-xs sm:text-sm tracking-[0.2em] text-white/60 mb-2 sm:mb-3 uppercase">
         Status
       </h2>
       <div className="flex items-center gap-2 sm:gap-3 text-2xl sm:text-3xl font-medium text-white">

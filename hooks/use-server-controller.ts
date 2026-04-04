@@ -17,7 +17,7 @@ async function fetchEc2Status(): Promise<"running" | "stopped" | "pending" | "st
   return "stopped";
 }
 
-async function fetchMcStatus(): Promise<{ online: boolean; playersOnline: number; maxPlayers: number }> {
+async function fetchMcStatus(): Promise<{ online: boolean; playersOnline: number; maxPlayers: number; players: any[] }> {
   const res = await fetch("/api/mc-status", { cache: "no-store" });
   if (!res.ok) throw new Error(`MC Status API returned ${res.status}`);
   const data = await res.json();
@@ -25,6 +25,7 @@ async function fetchMcStatus(): Promise<{ online: boolean; playersOnline: number
     online: !!data.online,
     playersOnline: data.playersOnline ?? 0,
     maxPlayers: data.maxPlayers ?? 5,
+    players: data.players ?? [],
   };
 }
 
@@ -32,6 +33,7 @@ export function useServerController() {
   const [serverStatus, setServerStatus] = useState<ServerStatus>("Checking");
   const [playersOnline, setPlayersOnline] = useState(0);
   const [maxPlayers, setMaxPlayers] = useState(20);
+  const [players, setPlayers] = useState<any[]>([]);
   const [actionLoading, setActionLoading] = useState(true);
 
   const isMounted = useRef(true);
@@ -75,9 +77,13 @@ export function useServerController() {
           if (!isMounted.current) return;
           setPlayersOnline(mc.online ? mc.playersOnline : 0);
           setMaxPlayers(mc.maxPlayers);
+          setPlayers(mc.online ? mc.players : []);
         } catch (mcErr) {
           console.warn("[poll] craftping failed (server still Online):", mcErr);
-          if (isMounted.current) setPlayersOnline(0);
+          if (isMounted.current) {
+            setPlayersOnline(0);
+            setPlayers([]);
+          }
         }
       }
     } finally {
@@ -121,5 +127,5 @@ export function useServerController() {
     }
   };
 
-  return { serverStatus, playersOnline, maxPlayers, actionLoading, startServer, stopServer };
+  return { serverStatus, playersOnline, maxPlayers, players, actionLoading, startServer, stopServer };
 }

@@ -23,8 +23,8 @@ export function ControlButtons({
   const isStopping = actionLoading && status !== "Offline";
 
   return (
-    <div className="bg-white/5 border border-white/10 hover:border-[#B89000] backdrop-blur-lg rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-8 flex flex-col items-center justify-center shadow-2xl col-span-1 md:col-span-2 lg:col-span-1 transition-all duration-300 hover:shadow-[0_0_20px_rgba(184,144,0,0.4)]">
-      <h2 className="font-mono text-xs sm:text-sm tracking-[0.2em] text-white/60 mb-4 sm:mb-6 uppercase">
+    <div className="bg-white/5 border border-white/10 hover:border-[#B89000] backdrop-blur-lg rounded-[1.5rem] sm:rounded-[2rem] p-4 sm:p-6 flex flex-col items-center justify-center shadow-2xl col-span-1 md:col-span-2 lg:col-span-1 transition-all duration-300 hover:shadow-[0_0_20px_rgba(184,144,0,0.4)] text-center">
+      <h2 className="font-mono text-xs sm:text-sm tracking-[0.2em] text-white/60 mb-3 sm:mb-4 uppercase">
         Controls
       </h2>
       <div className="flex flex-col gap-3 sm:gap-4 w-full">
