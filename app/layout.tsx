@@ -9,8 +9,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BSDK Server",
+  title: "kush's server",
   description: "Kushagra's Minecraft Server",
+  icons: {
+    icon: "/minecraft-icon.svg",
+  },
 };
 
 export default function RootLayout({
