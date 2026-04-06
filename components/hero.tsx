@@ -37,19 +37,40 @@ export function Hero() {
       >
         {/* Tightened padding so everything fits in one viewport */}
         <main className="relative z-10 flex flex-col items-center justify-center px-4 sm:px-6 md:px-12 py-4 w-full max-w-6xl">
-          <div className="mb-3 md:mb-6 text-center">
-            <h1 className="text-3xl sm:text-4xl md:text-6xl font-sentient text-white drop-shadow-md leading-tight whitespace-nowrap">
+          <div className="mb-2 md:mb-6 text-center">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-sentient text-white drop-shadow-md leading-tight whitespace-normal sm:whitespace-nowrap">
               <i className="font-light">Kush&apos;s</i> Minecraft Server <i className="font-light">Dashboard</i>
             </h1>
           </div>
 
-          {/* 2-Column Grid Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 w-full items-stretch pb-4 lg:pb-0">
+          {/* Main Grid Layout */}
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 w-full items-stretch pb-4 lg:pb-0">
             
-            {/* Left Column */}
-            <div className="flex flex-col gap-3 sm:gap-4 w-full h-full">
+            {/* Server Status: Top Left */}
+            <div className="col-span-1 flex flex-col order-1">
               <ServerStatusCard status={serverStatus} />
+            </div>
+
+            {/* Player Info: Top Right */}
+            <div className="col-span-1 flex flex-col order-2">
+              <PlayerInfoCard 
+                playersOnline={playersOnline} 
+                maxPlayers={maxPlayers} 
+              />
+            </div>
+
+            {/* IP Address: Middle Left (Hidden on Mobile) */}
+            <div className="hidden md:flex col-span-1 flex-col order-3">
               <IpAddressCard />
+            </div>
+
+            {/* Player Names: Full width mobile, Middle Right / Row 2 Col 2 on Desktop */}
+            <div className="col-span-2 md:col-span-1 lg:row-span-2 flex flex-col h-full order-4">
+              <PlayerNamesCard players={players} />
+            </div>
+
+            {/* Control Buttons: Full width mobile & tablet, Bottom Left Desktop */}
+            <div className="col-span-2 lg:col-span-1 flex flex-col order-3 md:order-5">
               <ControlButtons
                 status={serverStatus}
                 onStart={startServer}
@@ -57,15 +78,6 @@ export function Hero() {
                 actionLoading={actionLoading}
                 setHovering={setHovering}
               />
-            </div>
-
-            {/* Right Column */}
-            <div className="flex flex-col gap-3 sm:gap-4 w-full h-full">
-              <PlayerInfoCard 
-                playersOnline={playersOnline} 
-                maxPlayers={maxPlayers} 
-              />
-              <PlayerNamesCard players={players} />
             </div>
 
           </div>
