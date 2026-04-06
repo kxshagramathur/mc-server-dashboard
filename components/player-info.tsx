@@ -1,3 +1,5 @@
+import { Users } from "lucide-react";
+
 interface PlayerInfoProps {
   playersOnline: number;
   maxPlayers: number;
@@ -9,9 +11,12 @@ export function PlayerInfoCard({
 }: PlayerInfoProps) {
   return (
     <div className="bg-white/5 border border-white/10 hover:border-[#B89000] backdrop-blur-lg rounded-[1.5rem] sm:rounded-[2rem] p-4 sm:p-6 flex flex-col items-center justify-center shadow-2xl transition-all duration-300 hover:shadow-[0_0_20px_rgba(184,144,0,0.4)] text-center w-full">
-      <h2 className="font-mono text-xs sm:text-sm tracking-[0.2em] text-white/60 mb-2 sm:mb-3 uppercase">
-        Players
-      </h2>
+      <div className="flex items-center justify-center gap-2 mb-2 sm:mb-3 w-full">
+        <Users size={16} className="text-white/60" />
+        <h2 className="font-mono text-xs sm:text-sm tracking-[0.2em] text-white/60 uppercase">
+          Players
+        </h2>
+      </div>
       <div className="flex items-baseline gap-2 text-white">
         <span className="text-4xl sm:text-5xl font-medium">{playersOnline}</span>
         <span className="text-xl sm:text-2xl text-white/40">/ {maxPlayers}</span>

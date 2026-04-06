@@ -1,5 +1,5 @@
 import { Button } from "./ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, Gamepad2 } from "lucide-react";
 import { ServerStatus } from "@/hooks/use-server-controller";
 
 interface ControlButtonsProps {
@@ -24,9 +24,12 @@ export function ControlButtons({
 
   return (
     <div className="bg-white/5 border border-white/10 hover:border-[#B89000] backdrop-blur-lg rounded-[1.5rem] sm:rounded-[2rem] p-4 sm:p-6 flex flex-col items-center justify-center shadow-2xl col-span-1 md:col-span-2 lg:col-span-1 transition-all duration-300 hover:shadow-[0_0_20px_rgba(184,144,0,0.4)] text-center">
-      <h2 className="font-mono text-xs sm:text-sm tracking-[0.2em] text-white/60 mb-3 sm:mb-4 uppercase">
-        Controls
-      </h2>
+      <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4 w-full">
+        <Gamepad2 size={16} className="text-white/60" />
+        <h2 className="font-mono text-xs sm:text-sm tracking-[0.2em] text-white/60 uppercase">
+          Controls
+        </h2>
+      </div>
       <div className="flex flex-col gap-3 sm:gap-4 w-full">
         <Button
           className="w-full h-12 sm:h-16 text-sm sm:text-base tracking-wide flex items-center justify-center gap-2 sm:gap-3 uppercase transition-all"
