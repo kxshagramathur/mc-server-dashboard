@@ -5,7 +5,11 @@ const MC_HOST = process.env.MC_HOST as string;
 const MC_PORT = 25565;
 const TIMEOUT_MS = 5000;
 
-export async function GET() {
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const hostParam = searchParams.get("host");
+  const host = hostParam || MC_HOST;
+
   const queryClient = new QueryClient();
   const pingClient = new JavaPingClient();
 
@@ -13,7 +17,7 @@ export async function GET() {
     // 1. Try UDP Query (Full) for best detail and names
     try {
       const queried = await queryClient.queryFull(
-        MC_HOST,
+        host,
         MC_PORT,
         AbortSignal.timeout(TIMEOUT_MS)
       );
@@ -34,7 +38,7 @@ export async function GET() {
     // 2. Fallback to TCP Ping (Standard)
     try {
       const pinged = await pingClient.ping(
-        MC_HOST,
+        host,
         MC_PORT,
         { signal: AbortSignal.timeout(TIMEOUT_MS) }
       );

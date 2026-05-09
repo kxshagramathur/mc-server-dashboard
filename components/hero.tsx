@@ -4,7 +4,7 @@ import { GL } from "./gl";
 import { useState } from "react";
 import { useServerController } from "@/hooks/use-server-controller";
 import { ServerStatusCard } from "./server-status";
-import { PlayerInfoCard } from "./player-info";
+import { VersionInfoCard } from "./player-info";
 import { ControlButtons } from "./control-buttons";
 import { IpAddressCard } from "./ip-address";
 import { PlayerNamesCard } from "./player-names";
@@ -19,6 +19,7 @@ export function Hero() {
     playersOnline,
     maxPlayers,
     players,
+    ipAddress,
     actionLoading,
     startServer,
     stopServer,
@@ -51,17 +52,14 @@ export function Hero() {
               <ServerStatusCard status={serverStatus} />
             </div>
 
-            {/* Player Info: Top Right */}
+            {/* Version Info: Top Right */}
             <div className="col-span-1 flex flex-col order-2">
-              <PlayerInfoCard 
-                playersOnline={playersOnline} 
-                maxPlayers={maxPlayers} 
-              />
+              <VersionInfoCard />
             </div>
 
             {/* IP Address: Middle Left (Hidden on Mobile) */}
             <div className="hidden md:flex col-span-1 flex-col order-3">
-              <IpAddressCard />
+              <IpAddressCard ipAddress={ipAddress} />
             </div>
 
             {/* Player Names: Full width mobile, Middle Right / Row 2 Col 2 on Desktop */}

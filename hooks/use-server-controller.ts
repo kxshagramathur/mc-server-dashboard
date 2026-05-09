@@ -5,20 +5,23 @@ export type ServerStatus = "Offline" | "Starting" | "Online" | "Checking";
 const POLL_INTERVAL_MS = 10_000;
 
 // All Lambda calls go through our Next.js proxy → no CORS, no browser restrictions
-async function fetchEc2Status(): Promise<"running" | "stopped" | "pending" | "stopping"> {
+async function fetchEc2Status(): Promise<{ state: "running" | "stopped" | "pending" | "stopping"; ip: string | null }> {
   const res = await fetch("/api/ec2?action=status", { cache: "no-store" });
   if (!res.ok) throw new Error(`EC2 status API returned ${res.status}`);
   const data = await res.json();
-  // Lambda returns { "state": "running" | "stopped" | "pending" | ... }
+  // Lambda returns { "state": "running" | "stopped" | "pending" | ..., "ip": "X.X.X.X" | null }
   const state: string = (data.state ?? "").toLowerCase();
-  if (state.includes("running")) return "running";
-  if (state.includes("pending")) return "pending";
-  if (state.includes("stopping")) return "stopping";
-  return "stopped";
+  const ip = data.ip ?? null;
+
+  if (state.includes("running")) return { state: "running", ip };
+  if (state.includes("pending")) return { state: "pending", ip };
+  if (state.includes("stopping")) return { state: "stopping", ip };
+  return { state: "stopped", ip: null };
 }
 
-async function fetchMcStatus(): Promise<{ online: boolean; playersOnline: number; maxPlayers: number; players: any[] }> {
-  const res = await fetch("/api/mc-status", { cache: "no-store" });
+async function fetchMcStatus(host?: string | null): Promise<{ online: boolean; playersOnline: number; maxPlayers: number; players: any[] }> {
+  const url = host ? `/api/mc-status?host=${host}` : "/api/mc-status";
+  const res = await fetch(url, { cache: "no-store" });
   if (!res.ok) throw new Error(`MC Status API returned ${res.status}`);
   const data = await res.json();
   return {
@@ -34,6 +37,7 @@ export function useServerController() {
   const [playersOnline, setPlayersOnline] = useState(0);
   const [maxPlayers, setMaxPlayers] = useState(20);
   const [players, setPlayers] = useState<any[]>([]);
+  const [ipAddress, setIpAddress] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState(true);
 
   const isMounted = useRef(true);
@@ -41,15 +45,18 @@ export function useServerController() {
   const pollStatus = useCallback(async () => {
     try {
       let ec2Status: "running" | "stopped" | "pending" | "stopping";
+      let currentIp: string | null = null;
 
       try {
-        ec2Status = await fetchEc2Status();
-        console.log("[poll] EC2 state:", ec2Status);
+        const { state, ip } = await fetchEc2Status();
+        ec2Status = state;
+        currentIp = ip;
+        setIpAddress(ip);
+        console.log("[poll] EC2 state:", ec2Status, "IP:", ip);
       } catch (err) {
         console.warn("[poll] EC2 proxy unreachable:", err);
-        // Proxy is our own Next.js server — if this fails something is very wrong,
-        // but default to Offline so UI doesn't hang on "Checking"
         ec2Status = "stopped";
+        setIpAddress(null);
       }
 
       if (!isMounted.current) return;
@@ -72,7 +79,7 @@ export function useServerController() {
 
         // craftping is used ONLY for player count — never for server status
         try {
-          const mc = await fetchMcStatus();
+          const mc = await fetchMcStatus(currentIp);
           console.log("[poll] craftping:", mc);
           if (!isMounted.current) return;
           setPlayersOnline(mc.online ? mc.playersOnline : 0);
@@ -127,5 +134,5 @@ export function useServerController() {
     }
   };
 
-  return { serverStatus, playersOnline, maxPlayers, players, actionLoading, startServer, stopServer };
+  return { serverStatus, playersOnline, maxPlayers, players, ipAddress, actionLoading, startServer, stopServer };
 }

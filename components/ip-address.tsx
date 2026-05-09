@@ -1,13 +1,18 @@
 import { useState } from "react";
 import { Copy, Check, Globe } from "lucide-react";
 
-export function IpAddressCard() {
+interface IpAddressCardProps {
+  ipAddress: string | null;
+}
+
+export function IpAddressCard({ ipAddress }: IpAddressCardProps) {
   const [copied, setCopied] = useState(false);
-  const ipAddress = "43.204.78.40:25565";
+  const displayIp = ipAddress ? `${ipAddress}:25565` : "Server Offline";
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(ipAddress);
+      if (!ipAddress) return;
+      await navigator.clipboard.writeText(displayIp);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -25,14 +30,15 @@ export function IpAddressCard() {
       </div>
       <div className="flex items-stretch justify-center gap-3 w-full h-12 sm:h-auto max-w-[400px]">
         <div className="flex-1 bg-black/30 rounded-xl px-4 py-3 border border-white/5 flex items-center justify-center shadow-inner overflow-hidden">
-          <span className="text-sm sm:text-lg font-medium text-white truncate">
-            {ipAddress}
+          <span className={`text-sm sm:text-lg font-medium truncate ${!ipAddress ? 'text-white/40 italic' : 'text-white'}`}>
+            {displayIp}
           </span>
         </div>
         <button
           onClick={handleCopy}
-          className="bg-black/30 hover:bg-white/10 transition-colors rounded-xl px-4 py-3 border border-white/5 flex items-center justify-center shrink-0 shadow-inner group"
-          title="Copy IP Address"
+          disabled={!ipAddress}
+          className={`bg-black/30 hover:bg-white/10 transition-colors rounded-xl px-4 py-3 border border-white/5 flex items-center justify-center shrink-0 shadow-inner group ${!ipAddress ? 'opacity-50 cursor-not-allowed' : ''}`}
+          title={ipAddress ? "Copy IP Address" : "Server Offline"}
         >
           {copied ? (
             <Check size={18} className="text-green-500" />
